@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="issues_list">قائمه المشاكل</string>
+    <string name="issues_on_map">الخارطة</string>
+    <string name="file_issue">أبلغ عن مشكلة</string>
+    <string name="title">العنوان</string>
+    <string name="description">التفاصيل</string>
+
+
+    <string name="action_settings">اعدادات</string>
+    <string name="add_issue_failed">فشل في الابلاغ عن مشكلة</string>
+    <string name="add_issue_success">نجح في الابلاغ عن مشكلة</string>
+    <string name="add_new_issue">الابلاغ عن مشكلة</string>
+    <string name="app_name">مشاكل الطرقات</string>
+    <string name="change_lang_text">تغيير اللغة</string>
+    <string name="choose_photo">اختار صورة</string>
+    <string name="error_msg_description">لا يمكن لخانة التفاصيل ان تكون فارغة</string>
+    <string name="error_msg_title">لا يمكن لخانة العنوان ان تكون فارغة</string>
+    <string name="upload_task_failed">حدث خطأ</string>
+    <string name="uploading_photo">تحميل صورة</string>
+    <string name="photo_selection_error">حدث خطأ</string>
+</resources>
