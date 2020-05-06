@@ -1,4 +1,4 @@
-package com.barmej.streetissues;
+package com.barmej.streetissues.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +22,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.barmej.entity.Issue;
+import com.barmej.streetissues.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,13 +47,10 @@ import com.google.firebase.storage.UploadTask;
 import java.util.UUID;
 
 public class AddNewIssueActivity extends AppCompatActivity implements OnMapReadyCallback {
-    private static final String TAG = AddNewIssueActivity.class.getSimpleName();
     private static final int PERMISSION_REQUEST_ACCESS_LOCATION = 1;
-    private static final int PERMISSION_REQUEST_READ_STORAGE = 2;
     private static final int REQUEST_GET_PHOTO = 3;
     private static final LatLng DEFAULT_LOCATION = new LatLng(24.412582, 54.484793);
     private boolean mLocationPermissionGranted;
-    private boolean mReadStoragePermissionGranted;
     private Uri mIssuePhotoUri;
     private FusedLocationProviderClient mLocationProviderClient;
     private Location mLastKnownLocation;
@@ -79,7 +78,6 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         mAddIssueButton = findViewById(R.id.file_issue);
         mIssueTitleEditText = findViewById(R.id.issue_title);
         mIssueDescriptionEditTextView = findViewById(R.id.text_issue_description);
-        requestExternalStoragePermission();
         requestLocationPermission();
         mAddIssueButton.setOnClickListener(new View.OnClickListener() {
                                                @Override
@@ -207,15 +205,6 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    private void requestExternalStoragePermission() {
-        mReadStoragePermissionGranted = false;
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            mReadStoragePermissionGranted = true;
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_ACCESS_LOCATION);
-        }
-    }
-
     @SuppressLint("MissingPermission")
     private void requestDeviceCurrentLocation() {
         Task<Location> locationResult = mLocationProviderClient.getLastLocation();
@@ -245,12 +234,6 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
                     requestDeviceCurrentLocation();
-                }
-                break;
-            case PERMISSION_REQUEST_READ_STORAGE:
-                mReadStoragePermissionGranted = false;
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mReadStoragePermissionGranted = true;
                 }
                 break;
         }

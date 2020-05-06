@@ -1,4 +1,4 @@
-package com.barmej.streetissues;
+package com.barmej.streetissues.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.barmej.entity.Issue;
+import com.barmej.streetissues.activities.IssueDetailsActivity;
+import com.barmej.streetissues.adapter.IssuesListAdapter;
+import com.barmej.streetissues.R;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;

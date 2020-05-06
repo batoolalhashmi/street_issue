@@ -10,12 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".AddNewIssueActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".activities.AddNewIssueActivity"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
-            android:name=".IssueDetailsActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".MainActivity">
+            android:name=".activities.IssueDetailsActivity"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,4 +1,4 @@
-package com.barmej.streetissues;
+package com.barmej.streetissues.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -17,6 +17,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.barmej.streetissues.LocaleHelper;
+import com.barmej.streetissues.R;
+import com.barmej.streetissues.fragments.IssuesListFragment;
+import com.barmej.streetissues.fragments.IssuesMapFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 

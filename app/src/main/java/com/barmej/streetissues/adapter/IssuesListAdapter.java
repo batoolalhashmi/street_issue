@@ -1,4 +1,4 @@
-package com.barmej.streetissues;
+package com.barmej.streetissues.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.barmej.entity.Issue;
+import com.barmej.streetissues.R;
 import com.bumptech.glide.Glide;
-
 import java.util.List;
 
 public class IssuesListAdapter extends RecyclerView.Adapter<IssuesListAdapter.IssuesViewHolder> {

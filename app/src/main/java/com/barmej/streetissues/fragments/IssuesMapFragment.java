@@ -1,4 +1,4 @@
-package com.barmej.streetissues;
+package com.barmej.streetissues.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.barmej.entity.Issue;
+import com.barmej.streetissues.activities.IssueDetailsActivity;
+import com.barmej.streetissues.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
