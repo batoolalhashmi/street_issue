@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -21,9 +20,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.barmej.entity.Issue;
 import com.barmej.streetissues.R;
+import com.barmej.streetissues.entity.Issue;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -61,7 +62,8 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     private ImageView mIssuePhotoImageView;
     private Button mAddIssueButton;
     private GoogleMap mGoogleMap;
-    private ProgressDialog mDialog;
+    private ProgressBar mProgressBar;
+    private MarkerOptions markerOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_view);
         mapFragment.getMapAsync(this);
 
+        mProgressBar = findViewById(R.id.progressBar);
         mConstraintLayout = findViewById(R.id.add_issue_constraint_layout);
         mIssuePhotoImageView = findViewById(R.id.issue_photo_image_view);
         mAddIssueButton = findViewById(R.id.file_issue);
@@ -88,7 +91,11 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                                                        mIssueTitleEditText.setError(getString(R.string.error_msg_title));
                                                    } else if (TextUtils.isEmpty(mIssueDescriptionEditTextView.getText())) {
                                                        mIssueDescriptionEditTextView.setError(getString(R.string.error_msg_description));
-                                                   } else if (mIssuePhotoUri != null) {
+                                                   } else if (mIssuePhotoUri == null) {
+                                                       Toast.makeText(AddNewIssueActivity.this,R.string.select_photo,Toast.LENGTH_SHORT).show();
+                                                   }else if (markerOptions == null){
+                                                       Toast.makeText(AddNewIssueActivity.this,R.string.select_location,Toast.LENGTH_SHORT).show();
+                                                   }else {
                                                        addIssueToFirebase();
                                                    }
 
@@ -116,7 +123,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
             public void onMapClick(LatLng latLng) {
                 mSelectedLatlng = latLng;
                 mGoogleMap.clear();
-                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions = new MarkerOptions();
                 markerOptions.position(mSelectedLatlng);
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                 mGoogleMap.addMarker(markerOptions);
@@ -129,11 +136,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         StorageReference storageReference = firebaseStorage.getReference();
         final StorageReference photoStorageReference = storageReference.child(UUID.randomUUID().toString());
         final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        mDialog = new ProgressDialog(this);
-        mDialog.setIndeterminate(true);
-        mDialog.setTitle(R.string.app_name);
-        mDialog.setMessage(getString(R.string.uploading_photo));
-        mDialog.show();
+        mProgressBar.setVisibility(View.VISIBLE);
         photoStorageReference.putFile(mIssuePhotoUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -155,26 +158,26 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                                                 @Override
                                                 public void onDismissed(Snackbar transientBottomBar, int event) {
                                                     super.onDismissed(transientBottomBar, event);
-                                                    mDialog.dismiss();
+                                                    mProgressBar.setVisibility(View.GONE);
                                                     finish();
                                                 }
                                             }).show();
                                         } else {
                                             Snackbar.make(mConstraintLayout, R.string.add_issue_failed, Snackbar.LENGTH_SHORT).show();
-                                            mDialog.dismiss();
+                                            mProgressBar.setVisibility(View.GONE);
                                         }
                                     }
                                 });
                             } else {
                                 Snackbar.make(mConstraintLayout, R.string.upload_task_failed, Snackbar.LENGTH_SHORT).show();
-                                mDialog.dismiss();
+                                mProgressBar.setVisibility(View.GONE);
 
                             }
                         }
                     });
                 } else {
                     Snackbar.make(mConstraintLayout, R.string.upload_task_failed, Snackbar.LENGTH_SHORT).show();
-                    mDialog.dismiss();
+                    mProgressBar.setVisibility(View.GONE);
                 }
             }
         });
@@ -213,12 +216,9 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
             public void onSuccess(Location location) {
                 if (location != null) {
                     mLastKnownLocation = location;
-                    mSelectedLatlng = new com.google.android.gms.maps.model.LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                    mSelectedLatlng = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
                     mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mSelectedLatlng, 15));
                     mGoogleMap.setMyLocationEnabled(true);
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(mSelectedLatlng);
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                 } else {
                     mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15));
                 }

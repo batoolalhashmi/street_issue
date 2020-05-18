@@ -20,4 +20,6 @@
     <string name="upload_task_failed">حدث خطأ</string>
     <string name="uploading_photo">تحميل صورة</string>
     <string name="photo_selection_error">حدث خطأ</string>
+    <string name="select_photo">اضف صورة للمشكلة</string>
+    <string name="select_location">حدد موقع المشكلة</string>
 </resources>

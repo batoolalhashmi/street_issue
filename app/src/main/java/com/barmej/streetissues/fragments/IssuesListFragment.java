@@ -9,11 +9,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.barmej.entity.Issue;
+import com.barmej.streetissues.entity.Issue;
 import com.barmej.streetissues.activities.IssueDetailsActivity;
 import com.barmej.streetissues.adapter.IssuesListAdapter;
 import com.barmej.streetissues.R;
@@ -30,6 +31,9 @@ public class IssuesListFragment extends Fragment implements IssuesListAdapter.on
     private RecyclerView mRecycleViewIssues;
     private IssuesListAdapter mIssuesListAdapter;
     private ArrayList<Issue> mIssues;
+    private LinearLayoutManager mLinearLayoutManager;
+    private Parcelable savedRecyclerLayoutState;
+    private static final String BUNDLE_RECYCLER_LAYOUT = "recycler_layout";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,7 +45,8 @@ public class IssuesListFragment extends Fragment implements IssuesListAdapter.on
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRecycleViewIssues = view.findViewById(R.id.recycler_view_issue);
-        mRecycleViewIssues.setLayoutManager(new LinearLayoutManager(getContext()));
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mRecycleViewIssues.setLayoutManager(mLinearLayoutManager);
         mIssues = new ArrayList<>();
         mIssuesListAdapter = new IssuesListAdapter(mIssues, IssuesListFragment.this);
         mRecycleViewIssues.setAdapter(mIssuesListAdapter);
@@ -56,9 +61,26 @@ public class IssuesListFragment extends Fragment implements IssuesListAdapter.on
                         mIssues.add(documentSnapshot.toObject(Issue.class));
                     }
                     mIssuesListAdapter.notifyDataSetChanged();
+                    if(savedRecyclerLayoutState!=null){
+                        mLinearLayoutManager.onRestoreInstanceState(savedRecyclerLayoutState);
+                    }
                 }
             }
         });
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT,
+                mLinearLayoutManager.onSaveInstanceState());
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
+        }
     }
 
     @Override

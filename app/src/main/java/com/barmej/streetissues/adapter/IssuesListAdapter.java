@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.barmej.entity.Issue;
+import com.barmej.streetissues.entity.Issue;
 import com.barmej.streetissues.R;
 import com.bumptech.glide.Glide;
 import java.util.List;

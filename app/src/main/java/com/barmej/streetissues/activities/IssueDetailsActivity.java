@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.barmej.entity.Issue;
+import com.barmej.streetissues.entity.Issue;
 import com.barmej.streetissues.R;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;

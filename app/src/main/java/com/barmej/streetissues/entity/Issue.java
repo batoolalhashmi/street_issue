@@ -1,5 +1,4 @@
-package com.barmej.entity;
-
+package com.barmej.streetissues.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,16 +11,17 @@ public class Issue implements Parcelable {
     private String photo;
     private GeoPoint location;
 
-    public Issue(){
+    public Issue() {
 
     }
 
-    public Issue(String title,String description, String photo , GeoPoint location){
+    public Issue(String title, String description, String photo, GeoPoint location) {
         this.title = title;
         this.description = description;
         this.photo = photo;
         this.location = location;
     }
+
 
     protected Issue(Parcel in) {
         title = in.readString();
@@ -86,5 +86,10 @@ public class Issue implements Parcelable {
         parcel.writeString(photo);
         parcel.writeDouble(location.getLatitude());
         parcel.writeDouble(location.getLongitude());
+
     }
 }
+
+
+
+
