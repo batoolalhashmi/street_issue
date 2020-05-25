@@ -26,6 +26,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import static com.google.firebase.firestore.Query.Direction.DESCENDING;
+
 public class IssuesListFragment extends Fragment implements IssuesListAdapter.onIssueClickListener {
 
     private RecyclerView mRecycleViewIssues;
@@ -52,7 +54,7 @@ public class IssuesListFragment extends Fragment implements IssuesListAdapter.on
         mRecycleViewIssues.setAdapter(mIssuesListAdapter);
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("issues").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        firebaseFirestore.collection("issues").orderBy("date", DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (e == null) {

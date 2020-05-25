@@ -16,6 +16,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +46,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 public class AddNewIssueActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -64,6 +67,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
     private GoogleMap mGoogleMap;
     private ProgressBar mProgressBar;
     private MarkerOptions markerOptions;
+    private Date date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,9 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_view);
         mapFragment.getMapAsync(this);
 
+        Calendar calendar = Calendar.getInstance();
+        date = calendar.getTime();
+
         mProgressBar = findViewById(R.id.progressBar);
         mConstraintLayout = findViewById(R.id.add_issue_constraint_layout);
         mIssuePhotoImageView = findViewById(R.id.issue_photo_image_view);
@@ -82,6 +89,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         mIssueTitleEditText = findViewById(R.id.issue_title);
         mIssueDescriptionEditTextView = findViewById(R.id.text_issue_description);
         requestLocationPermission();
+        mAddIssueButton.setVisibility(View.VISIBLE);
         mAddIssueButton.setOnClickListener(new View.OnClickListener() {
                                                @Override
                                                public void onClick(View view) {
@@ -136,6 +144,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
         StorageReference storageReference = firebaseStorage.getReference();
         final StorageReference photoStorageReference = storageReference.child(UUID.randomUUID().toString());
         final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        mAddIssueButton.setVisibility(View.INVISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
         photoStorageReference.putFile(mIssuePhotoUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -150,6 +159,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                                 issue.setDescription(mIssueDescriptionEditTextView.getText().toString());
                                 issue.setPhoto(task.getResult().toString());
                                 issue.setLocation(new GeoPoint(mSelectedLatlng.latitude, mSelectedLatlng.longitude));
+                                issue.setDate(date.getTime());
                                 firebaseFirestore.collection("issues").add(issue).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentReference> task) {
@@ -164,12 +174,14 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                                             }).show();
                                         } else {
                                             Snackbar.make(mConstraintLayout, R.string.add_issue_failed, Snackbar.LENGTH_SHORT).show();
+                                            mAddIssueButton.setVisibility(View.VISIBLE);
                                             mProgressBar.setVisibility(View.GONE);
                                         }
                                     }
                                 });
                             } else {
                                 Snackbar.make(mConstraintLayout, R.string.upload_task_failed, Snackbar.LENGTH_SHORT).show();
+                                mAddIssueButton.setVisibility(View.VISIBLE);
                                 mProgressBar.setVisibility(View.GONE);
 
                             }
@@ -177,6 +189,7 @@ public class AddNewIssueActivity extends AppCompatActivity implements OnMapReady
                     });
                 } else {
                     Snackbar.make(mConstraintLayout, R.string.upload_task_failed, Snackbar.LENGTH_SHORT).show();
+                    mAddIssueButton.setVisibility(View.VISIBLE);
                     mProgressBar.setVisibility(View.GONE);
                 }
             }

@@ -1,4 +1,5 @@
 package com.barmej.streetissues.entity;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,16 +11,18 @@ public class Issue implements Parcelable {
     private String description;
     private String photo;
     private GeoPoint location;
+    private long date;
 
     public Issue() {
 
     }
 
-    public Issue(String title, String description, String photo, GeoPoint location) {
+    public Issue(String title, String description, String photo, GeoPoint location, long date) {
         this.title = title;
         this.description = description;
         this.photo = photo;
         this.location = location;
+        this.date = date;
     }
 
 
@@ -28,6 +31,8 @@ public class Issue implements Parcelable {
         description = in.readString();
         photo = in.readString();
         location = new GeoPoint(in.readDouble(), in.readDouble());
+        date = in.readLong();
+
     }
 
     public static final Creator<Issue> CREATOR = new Creator<Issue>() {
@@ -74,6 +79,14 @@ public class Issue implements Parcelable {
         this.location = location;
     }
 
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -86,6 +99,7 @@ public class Issue implements Parcelable {
         parcel.writeString(photo);
         parcel.writeDouble(location.getLatitude());
         parcel.writeDouble(location.getLongitude());
+        parcel.writeLong(date);
 
     }
 }
